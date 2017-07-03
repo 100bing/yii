@@ -1,14 +1,49 @@
 <?php
 namespace backend\controllers;
 
+use backend\components\RbacFilter;
 use backend\models\Login;
 use backend\models\Password;
 use backend\models\User;
 use yii\behaviors\TimestampBehavior;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class AdminController extends Controller{
+    public function behaviors(){
+
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'only'=>['add','delete','index','edit','password','user'],
+
+
+
+
+
+            ]
+
+        ];
+    }
+
+
+
+    public function actionYi(){
+    $model=new User();
+    $model->username='admin';
+    $model->password_hash=\Yii::$app->security->generatePasswordHash(123456);
+
+    $model->email='admin@admin.com';
+    $model->auth_key=\Yii::$app->security->generateRandomString();
+
+    $model->save(false);
+    return $this->redirect(['admin/login']);
+
+
+
+}
+
     //创建增加
     public function actionAdd(){
         $model=new User();
@@ -16,7 +51,14 @@ class AdminController extends Controller{
             $model->load(\Yii::$app->request->post());
             if($model->validate()){
                 $model->password_hash=\Yii::$app->security->generatePasswordHash($model->password);
-                $model->save();
+
+
+
+       $model->save();
+              ;
+               $model->addUser( $model->id);
+
+
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['admin/index']);
             }
@@ -48,16 +90,6 @@ class AdminController extends Controller{
         if($request->isPost){
             $model->load($request->post());
             if($model->validate()){
-                $use=User::findOne(['id'=>\Yii::$app->user->id]);
-
-                 $use->ip=\Yii::$app->request->userIP;
-                $use->auth_key=\Yii::$app->security->generateRandomString();
-
-                $use->updated_at=time();
-//                var_dump($use);
-//                exit;
-                $use->save(false);
-
 \Yii::$app->session->setFlash('success','登陆成功');
 
         return $this->redirect(['admin/index']);
@@ -89,6 +121,16 @@ $request= \Yii::$app->request;
 }
     //chuangjian删除方法
     public function actionDelete($id){
+
+
+
+            $role=\Yii::$app->authManager->getRolesByUser($id);
+            if($role==null){
+                throw new NotFoundHttpException('honghu不存在');
+            }
+            \Yii::$app->authManager->revokeAll($id);
+
+
         User::findOne(['id'=>$id])->delete();
         \Yii::$app->session->setFlash('success','删除成功');
         return $this->redirect(['admin/index']);
@@ -96,47 +138,23 @@ $request= \Yii::$app->request;
     //创建修改方法
     public function actionEdit($id){
         $model=User::findOne(['id'=>$id]);
+        $authManager=\Yii::$app->authManager;
+        $roles=$authManager->getRolesByUser($id);
+        $model->loadDate($roles);
 
         if(\Yii::$app->request->isPost){
             $model->load(\Yii::$app->request->post());
             if($model->validate()){
-                $model->password_hash=\Yii::$app->security->generatePasswordHash($model->password);
-                $model->save();
-                \Yii::$app->session->setFlash('success','添加成功');
-                return $this->redirect(['admin/index']);
+        if($model->updateRole($id)){
+            $model->password_hash=\Yii::$app->security->generatePasswordHash($model->password);
+            $model->save();
+            \Yii::$app->session->setFlash('success','添加成功');
+            return $this->redirect(['admin/index']);
+        }
+
             }
         }
         return $this->render('add',['model'=>$model]);
     }
-
-
-
-    public function behaviors(){
-
-        return[
-
-            'acf'=>[
-                'class'=>AccessControl::className(),
-                'rules'=>[
-                    [//未认证用户允许执行view操作
-                        'allow'=>true,//是否允许执行
-                        'actions'=>['login'],//指定操作
-                        'roles'=>['?'],//角色？表示未认证用户  @表示已认证用户
-                    ],
-                    [//已认证用户允许执行add操作
-                        'allow'=>true,//是否允许执行
-                        'actions'=>['add','index','edit','user','password','logout','delete','login'],//指定操作
-                        'roles'=>['@'],//角色？表示未认证用户  @表示已认证用户
-                    ],
-
-
-
-                ]
-            ],
-
-        ];
-    }
-
-
 
 }

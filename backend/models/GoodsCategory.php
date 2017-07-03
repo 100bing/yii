@@ -91,6 +91,9 @@ public static function tableName()
     {
         return new GoodsCategoryQuery(get_called_class());
     }
+    public function getChildren(){
+        return $this->hasMany(self::className(),['parent_id'=>'id']);
+    }
 
 
 }

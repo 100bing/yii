@@ -12,7 +12,7 @@ use xj\uploadify\UploadAction;
 use yii\helpers\ArrayHelper;
 use yii\data\Pagination;
 
-class GoodsController extends \yii\web\Controller
+class GoodsController extends GongController
 {
     //显示主页面
     public function actionIndex()
@@ -182,16 +182,20 @@ $key=isset($_GET['key'])?$_GET['key']:'';
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
 
-
-                    $img= $action->getWebUrl();
-
-//                    $action->output['fileUrl'] = $action->getWebUrl();
-                    //设置七牛云
-                    $qiniu=\Yii::$app->qiniu;
-                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$img,$img);
-                    //获取七牛云地址
-                    $url = $qiniu->getLink($img);
-                    $action->output['fileUrl'] =$url;
+                    $qiniu = \Yii::$app->qiniu;
+                    $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
+//                    //获取该图片的在七牛云的地址
+                    $url = $qiniu->getLink($action->getWebUrl());
+                    $action->output['fileUrl']=$url;
+//                    $img= $action->getWebUrl();
+//
+////                    $action->output['fileUrl'] = $action->getWebUrl();
+//                    //设置七牛云
+//                    $qiniu=\Yii::$app->qiniu;
+//                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$img,$img);
+//                    //获取七牛云地址
+//                    $url = $qiniu->getLink($img);
+//                    $action->output['fileUrl'] =$url;
 
 
                 },

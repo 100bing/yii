@@ -8,7 +8,7 @@ use backend\models\Article;
 use backend\models\Article_category;
 use yii\web\Controller;
 
-class Article_categoryController extends Controller
+class Article_categoryController extends GongController
 {
     //文章分类
     public function actionIndex($id){

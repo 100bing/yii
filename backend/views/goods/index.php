@@ -48,11 +48,12 @@ echo yii\bootstrap\Html::endForm() ;?>
 
 
 
-
-            <td><?=\yii\bootstrap\Html::a('修改',['goods/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
-
-                <?=\yii\bootstrap\Html::a('删除',['goods/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
-                <?=\yii\bootstrap\Html::a('相册',['goods_img/index','id'=>$model->id],['class'=>'btn btn-info btn-xs'])?>
+            <td> <?php if(Yii::$app->user->can('goods/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['goods/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+                <?php if(Yii::$app->user->can('goods/delete')){
+                    echo \yii\bootstrap\Html::a('删除',['goods/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+                <?php if(Yii::$app->user->can('goods_img/index')){
+                    echo \yii\bootstrap\Html::a('相册',['goods_img/index','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
 
         </tr>
 

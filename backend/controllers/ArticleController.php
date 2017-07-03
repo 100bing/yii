@@ -7,7 +7,7 @@ use backend\models\Article_category;
 use backend\models\Article_detail;
 use yii\web\Controller;
 
-class ArticleController extends Controller{
+class ArticleController extends GongController{
     //显示文章的主页面
 
     public function actionIndex(){

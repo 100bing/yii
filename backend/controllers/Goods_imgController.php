@@ -91,16 +91,19 @@ public function actionEdit($id){
                     $model=new Goods_img();
 
                     $model->goods_id=\Yii::$app->request->post('goods_id');
-                   $img= $model->img=$action->getWebUrl();
-                    $model->save();
+
+
 //                    $img= $action->getWebUrl();
 //                    $action->output['fileUrl'] = $action->getWebUrl();
                     //设置七牛云
-                    $qiniu=\Yii::$app->qiniu;
-                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$img,$img);
-                    //获取七牛云地址
-                    $url = $qiniu->getLink($img);
-                    $action->output['fileUrl'] =$url;
+                    $qiniu = \Yii::$app->qiniu;
+                    $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
+//                    //获取该图片的在七牛云的地址
+                    $url = $qiniu->getLink($action->getWebUrl());
+                    $model->img=$url;
+                    $model->save();
+                    $action->output['fileUrl']=$url;
+
 
 
                 },

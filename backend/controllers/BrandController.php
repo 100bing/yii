@@ -143,14 +143,15 @@ class BrandController extends Controller{
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
-                    $img= $action->getWebUrl();
+//                    $img= $action->getWebUrl();
 //                    $action->output['fileUrl'] = $action->getWebUrl();
                     //设置七牛云
-                            $qiniu=\Yii::$app->qiniu;
-                                $qiniu->uploadFile(\Yii::getAlias('@webroot').$img,$img);
-                    //获取七牛云地址
-                    $url = $qiniu->getLink($img);
-                    $action->output['fileUrl'] =$url;
+                    $qiniu = \Yii::$app->qiniu;
+                    $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
+//                    //获取该图片的在七牛云的地址
+                    $url = $qiniu->getLink($action->getWebUrl());
+                    $action->output['fileUrl']=$url;
+
 
 //                    $action->getFilename(); // "image/yyyymmddtimerand.jpg"
 //                    $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"

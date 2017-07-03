@@ -20,10 +20,16 @@
             <td><?=$model->name?></td>
             <td><?=$model->parent_id==0?'顶级分类':$model->goodsCategory->name?></td>
             <td><?=$model->intro?></td>
+            <?php if(Yii::$app->user->can('goods-category/edit')){
+                echo \yii\bootstrap\Html::a('修改',['goods-category/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+            <?php if(Yii::$app->user->can('goods-category/delete')){
+                echo \yii\bootstrap\Html::a('删除',['goods-category/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
 
-            <td><?=\yii\bootstrap\Html::a('修改',['goods-category/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
 
-                <?=\yii\bootstrap\Html::a('删除',['goods-category/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
+            <td>    <?php if(Yii::$app->user->can('goods-category/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['goods-category/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+                <?php if(Yii::$app->user->can('goods-category/delete')){
+                    echo \yii\bootstrap\Html::a('删除',['goods-category/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
 
         </tr>
 

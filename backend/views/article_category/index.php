@@ -34,9 +34,11 @@
 
 
 
-        <td><?=\yii\bootstrap\Html::a('修改',['article_category/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
+        <td><?php if(Yii::$app->user->can('article_category/edit')){
+                echo \yii\bootstrap\Html::a('修改',['article_category/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
 
-            <?=\yii\bootstrap\Html::a('删除',['article_category/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
+            <?php if(Yii::$app->user->can('article_category/delete')){
+                echo \yii\bootstrap\Html::a('删除',['article_category/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
 
     </tr>
 

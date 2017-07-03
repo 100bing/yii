@@ -6,7 +6,7 @@ use backend\models\GoodsCategory;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
-class GoodsCategoryController extends \yii\web\Controller
+class GoodsCategoryController extends GongController
 { //添加商品分类
     public function actionAdd(){
         $model=new GoodsCategory();

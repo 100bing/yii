@@ -3,7 +3,7 @@ namespace backend\controllers;
 use backend\models\Article_detail;
 use yii\web\Controller;
 
-class Article_detailController extends Controller{
+class Article_detailController extends GongController{
     //实现主页面的
     public function actionIndex($id){
        $model= Article_detail::findOne(['artice_id'=>$id]);

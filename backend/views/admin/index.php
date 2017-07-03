@@ -36,13 +36,19 @@
 
 
 
-            <td><?=\yii\bootstrap\Html::a('修改',['admin/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
+            <td>
+                <?php if(Yii::$app->user->can('admin/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['admin/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+                <?php if(Yii::$app->user->can('admin/delete')){
+                    echo\yii\bootstrap\Html::a('删除',['admin/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
 
-                <?=\yii\bootstrap\Html::a('删除',['admin/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
+                <?php if(Yii::$app->user->can('admin/password')){
+                    echo\yii\bootstrap\Html::a('修改密码',['admin/password','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+
 
         </tr>
 
     <?php endforeach;?>
     <?=\yii\bootstrap\Html::a('增加',['admin/add'],['class'=>'btn btn-warning btn-xs'])?></td>
-    <?=\yii\bootstrap\Html::a('推出',['admin/logout'],['class'=>'btn btn-warning btn-xs'])?></td>
+
 </table>

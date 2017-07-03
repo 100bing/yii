@@ -1,7 +1,6 @@
 <?php
 
 $from=yii\bootstrap\ActiveForm::begin();
-
 echo $from->field($model,'username');
 echo $from->field($model,'password');
 echo $from->field($model,'rememberMe')->checkbox();

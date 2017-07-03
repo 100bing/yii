@@ -4,16 +4,65 @@ namespace backend\models;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\rbac\Role;
 use yii\web\IdentityInterface;
+use yii\web\NotFoundHttpException;
 
 class User extends ActiveRecord implements IdentityInterface{
     public $password;
     public static $status=['1'=>'正常','0'=>'异常'];
+  public $role=[];
+
+
+    public static function getRoleOption(){
+        $authManager=\Yii::$app->authManager;
+        return ArrayHelper::map($authManager->getRoles(),'name','description');//获取所有权限
+    }
+    public function addUser($id){
+        $authManager=\Yii::$app->authManager;
+
+        foreach($this->role as $role){
+            $role=$authManager->getRole($role);
+            var_dump($role);
+            if($role) {$authManager->assign($role,$id);}
+        }
+ }
+    //修改会县
+    public  function loadDate($roles){
+//        $roles=\Yii::$app->authManager->getRole($roles);
+        foreach ($roles as $role){
+            $this->role[]=$role->name;
+        }
+
+//
+//        }
+    }
+    public function updateRole($id){
+        $authManager=\Yii::$app->authManager;
+        if(User::findOne(['id'=>$id])){
+            $authManager->revokeAll($id);
+            $roles=$this->role;
+            if($roles){
+                foreach($roles as $role){
+                    $authManager->assign($authManager->getRole($role),$id);
+                }
+            }
+            return true;
+        }else{
+            throw new NotFoundHttpException('CUOWU');
+        }
+
+
+    }
+
     public function rules()
     {
         return [
-            [['username', 'password','email','status'], 'required'],
+            [['username', 'password','email','status','role'], 'required'],
             ['email', 'email'],
+            [['username','email'],'unique']
+
 //            [['ip','created_at'],'string','max'=>255],
 
 
@@ -31,7 +80,8 @@ class User extends ActiveRecord implements IdentityInterface{
             'username' => '用户名',
             'password'=>'密码',
             'email'=>'电子邮箱',
-               'status'=>'状态'
+               'status'=>'状态',
+            'role'=>'角色'
 
         ];
     }

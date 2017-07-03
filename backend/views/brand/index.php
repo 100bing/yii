@@ -27,14 +27,20 @@
 
 
 
-        
 
 
 
 
-            <td><?=\yii\bootstrap\Html::a('修改',['brand/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
 
-                <?=\yii\bootstrap\Html::a('删除',['brand/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
+            <td>
+
+                <?php if(Yii::$app->user->can('brand/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['brand/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+                <?php if(Yii::$app->user->can('brand/delete')){
+                    echo\yii\bootstrap\Html::a('删除',['brand/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+
+
+            </td>
 
         </tr>
 

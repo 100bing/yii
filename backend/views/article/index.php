@@ -31,9 +31,14 @@
             <td><?=$model->sort?></td>
             <td><?=\backend\models\Article_category::$status[$model->status]?></td>
             <td><?=date('Y-m-d G-i-s',$model->create_time)?></td>
-            <td><?=\yii\bootstrap\Html::a('查看',['article_detail/index','id'=>$model->id],['class'=>'btn btn-info btn-xs'])?>
+
+
+
+            <td><?php if(Yii::$app->user->can('article_detail/index')){
+                    echo \yii\bootstrap\Html::a('修改',['article_detail/index','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
               </td>
-            <td><?=\yii\bootstrap\Html::a('查看',['article_category/index','id'=>$model->article_category_id],['class'=>'btn btn-info btn-xs'])?>
+            <td> <?php if(Yii::$app->user->can('article_category/index')){
+                    echo \yii\bootstrap\Html::a('查看',['article_category/index','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
             </td>
 
 

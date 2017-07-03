@@ -36,7 +36,14 @@ class Login extends Model{
             if(!\Yii::$app->security->validatePassword($this->password,$asd->password_hash)){
                 $this->addError('password','密码不正确');
             }else{
-               $duration=$this->rememberMe?7*24*3600:0;
+
+                $asd->ip=\Yii::$app->request->userIP;
+                $asd->auth_key=\Yii::$app->security->generateRandomString();
+
+
+                $asd->updated_at=time();
+                $asd->save(false);
+                $duration=$this->rememberMe?7*24*3600:0;
                 \Yii::$app->user->login($asd,$duration);
             }
         }else{

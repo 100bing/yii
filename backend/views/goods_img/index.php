@@ -19,9 +19,10 @@
 
 
 
-            <td><?=\yii\bootstrap\Html::a('修改',['goods_img/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
-
-                <?=\yii\bootstrap\Html::a('删除',['goods_img/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs'])?>
+            <td>  <?php if(Yii::$app->user->can('goods_img/edit')){
+                    echo \yii\bootstrap\Html::a('修改',['goods_img/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
+                <?php if(Yii::$app->user->can('oods_img/delete')){
+                    echo \yii\bootstrap\Html::a('删除',['goods_img/delete','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);}?>
 
 
         </tr>
